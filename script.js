@@ -1,5 +1,5 @@
 // ==============================
-// Travel Bill Summary
+// Management Information System
 // script.js
 // ==============================
 
@@ -155,11 +155,11 @@ document.getElementById("downloadPdf")
 
     if (month === "") {
 
-        month = "Travel";
+        month = "Management";
 
     }
 
-    pdf.save("Travel_Bill_Summary_" + month + ".pdf");
+    pdf.save("Management_Information_System_" + month + ".pdf");
 
 });
 
