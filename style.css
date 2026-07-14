@@ -1,6 +1,5 @@
-```css
 /* ==========================
-   Travel Bill Summary
+   Management Information System
    style.css
 ========================== */
 
@@ -12,7 +11,7 @@
 
 body{
     font-family:'Poppins',sans-serif;
-    background:linear-gradient(135deg,#dbeafe,#f0f9ff,#ede9fe);
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
     padding:40px 15px;
     color:#222;
 }
@@ -25,27 +24,37 @@ body{
     background:#fff;
     border-radius:18px;
     overflow:hidden;
-    box-shadow:0 15px 40px rgba(0,0,0,.15);
+    box-shadow:0 15px 40px rgba(0,0,0,.2);
 }
 
 /* Header */
 
 .header{
-    background:linear-gradient(90deg,#2563eb,#7c3aed);
+    background: linear-gradient(90deg, #ff007f, #7928ca, #00dfd8);
+    background-size: 200% auto;
+    animation: gradientShift 6s linear infinite;
     color:#fff;
     text-align:center;
     padding:30px;
 }
 
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 .header h1{
     font-size:34px;
     font-weight:700;
+    text-shadow: 0px 2px 10px rgba(0,0,0,0.3);
 }
 
 .header p{
     margin-top:8px;
     font-size:16px;
     opacity:.95;
+    letter-spacing: 1px;
 }
 
 /* Information */
@@ -65,12 +74,12 @@ body{
 .input-group label{
     font-weight:600;
     margin-bottom:8px;
-    color:#1e3a8a;
+    color:#7928ca;
 }
 
 .input-group input{
     padding:12px;
-    border:2px solid #cbd5e1;
+    border:2px solid #fecfef;
     border-radius:10px;
     font-size:15px;
     transition:.3s;
@@ -78,8 +87,8 @@ body{
 
 .input-group input:focus{
     outline:none;
-    border-color:#2563eb;
-    box-shadow:0 0 8px rgba(37,99,235,.25);
+    border-color:#ff007f;
+    box-shadow:0 0 8px rgba(255, 0, 127, 0.3);
 }
 
 /* Table */
@@ -92,30 +101,45 @@ body{
 table{
     width:100%;
     border-collapse:collapse;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 thead tr{
-    background:#2563eb;
+    background: linear-gradient(90deg, #7928ca, #ff007f);
     color:#fff;
 }
 
 th,
 td{
-    border:1px solid #444;
+    border:1px solid #ffb6c1;
     padding:12px;
     text-align:center;
 }
 
+th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
 tbody tr:nth-child(odd){
-    background:#eff6ff;
+    background:#fff0f6;
 }
 
 tbody tr:nth-child(even){
-    background:#fef9c3;
+    background:#e8f0fe;
+}
+
+tbody tr{
+    transition: all 0.3s ease;
 }
 
 tbody tr:hover{
-    background:#dcfce7;
+    background:#d5fefd;
+    transform: scale(1.01);
+    box-shadow: 0 5px 15px rgba(0, 223, 216, 0.4);
 }
 
 td input{
@@ -125,6 +149,7 @@ td input{
     text-align:center;
     font-size:15px;
     padding:6px;
+    font-weight: 500;
 }
 
 td input:focus{
@@ -133,7 +158,7 @@ td input:focus{
 
 .amount{
     font-weight:700;
-    color:#16a34a;
+    color:#ff007f;
 }
 
 /* Buttons */
@@ -155,24 +180,25 @@ button{
     border-radius:10px;
     padding:14px 28px;
     transition:.25s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
 }
 
 #addRow{
-    background:#10b981;
+    background: linear-gradient(135deg, #00dfd8, #0072ff);
 }
 
 #addRow:hover{
     transform:translateY(-2px);
-    background:#059669;
+    box-shadow: 0 6px 20px rgba(0, 223, 216, 0.6);
 }
 
 #downloadPdf{
-    background:#ef4444;
+    background: linear-gradient(135deg, #ff007f, #7928ca);
 }
 
 #downloadPdf:hover{
     transform:translateY(-2px);
-    background:#dc2626;
+    box-shadow: 0 6px 20px rgba(255, 0, 127, 0.6);
 }
 
 .delete-btn{
@@ -208,32 +234,36 @@ button{
 .summary-row label{
     width:45%;
     font-weight:600;
+    color: #4a0e4e;
 }
 
 .summary-row input{
     width:55%;
     padding:12px;
-    border:2px solid #d1d5db;
+    border:2px solid #fecfef;
     border-radius:10px;
     font-size:16px;
     text-align:right;
+    background: #fff;
 }
 
 .balance input{
-    background:#dcfce7;
-    color:#166534;
+    background:#d5fefd;
+    color:#0072ff;
     font-weight:700;
+    border-color: #00dfd8;
 }
 
 /* Footer */
 
 footer{
-    background:#f8fafc;
+    background:#fff5f8;
     text-align:center;
     padding:18px;
     font-size:14px;
-    color:#64748b;
-    border-top:1px solid #e2e8f0;
+    color:#7928ca;
+    border-top:1px solid #fecfef;
+    font-weight: 500;
 }
 
 /* Scrollbar */
@@ -244,12 +274,12 @@ footer{
 }
 
 ::-webkit-scrollbar-thumb{
-    background:#2563eb;
+    background:#ff007f;
     border-radius:10px;
 }
 
 ::-webkit-scrollbar-track{
-    background:#dbeafe;
+    background:#fecfef;
 }
 
 /* Responsive */
@@ -279,4 +309,3 @@ button{
 }
 
 }
-```
