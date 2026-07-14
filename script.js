@@ -1,41 +1,48 @@
-// =============================
+// ==============================
 // Travel Bill Summary
 // script.js
-// =============================
+// ==============================
 
-// Attach calculation events
-function attachEvents(row) {
+// Attach events to existing rows
+document.querySelectorAll("#expenseTable tbody tr").forEach(addEvents);
 
-    const rate = row.querySelector(".rate");
-    const qty = row.querySelector(".qty");
+function addEvents(row) {
 
-    rate.addEventListener("input", calculateRow);
-    qty.addEventListener("input", calculateRow);
+    row.querySelector(".rate").addEventListener("input", calculateRow);
+    row.querySelector(".qty").addEventListener("input", calculateRow);
 
 }
 
-document.querySelectorAll("#expenseTable tbody tr").forEach(attachEvents);
-
-// Calculate one row
-function calculateRow(e){
+// Calculate row
+function calculateRow(e) {
 
     const row = e.target.closest("tr");
 
-    const rate = parseFloat(row.querySelector(".rate").value) || 0;
-    const qty = parseFloat(row.querySelector(".qty").value) || 0;
+    let rate = parseFloat(row.querySelector(".rate").value) || 0;
 
-    row.querySelector(".amount").value = (rate * qty).toFixed(2);
+    let qty = row.querySelector(".qty").value;
+
+    // Qty blank => 1
+    if (qty === "") {
+        qty = 1;
+    } else {
+        qty = parseFloat(qty) || 1;
+    }
+
+    let amount = rate * qty;
+
+    row.querySelector(".amount").value = amount.toFixed(2);
 
     calculateTotal();
 
 }
 
 // Calculate Total
-function calculateTotal(){
+function calculateTotal() {
 
     let total = 0;
 
-    document.querySelectorAll(".amount").forEach(item=>{
+    document.querySelectorAll(".amount").forEach(item => {
 
         total += parseFloat(item.value) || 0;
 
@@ -48,91 +55,59 @@ function calculateTotal(){
 }
 
 // Balance Due
-function calculateBalance(){
+function calculateBalance() {
 
-    const total = parseFloat(document.getElementById("total").value) || 0;
+    let total = parseFloat(document.getElementById("total").value) || 0;
 
-    const advance = parseFloat(document.getElementById("advance").value) || 0;
+    let advance = parseFloat(document.getElementById("advance").value) || 0;
 
     document.getElementById("balance").value = (total - advance).toFixed(2);
 
 }
 
 document.getElementById("advance")
-.addEventListener("input",calculateBalance);
+.addEventListener("input", calculateBalance);
 
 // =====================
 // Add Row
 // =====================
 
 document.getElementById("addRow")
-.addEventListener("click",()=>{
+.addEventListener("click", function () {
 
     const tbody = document.querySelector("#expenseTable tbody");
 
     const tr = document.createElement("tr");
 
     tr.innerHTML = `
-
-<td>
-<input type="text" placeholder="Particular">
-</td>
-
-<td>
-<input class="rate" type="number">
-</td>
-
-<td>
-<input class="qty" type="number">
-</td>
-
-<td>
-<input class="amount" readonly>
-</td>
-
-<td>
-<button class="delete-btn">
-❌
-</button>
-</td>
-
-`;
+        <td><input type="text" placeholder="Particular"></td>
+        <td><input type="number" class="rate"></td>
+        <td><input type="number" class="qty"></td>
+        <td><input type="text" class="amount" readonly></td>
+    `;
 
     tbody.appendChild(tr);
 
-    attachEvents(tr);
-
-    tr.querySelector(".delete-btn")
-    .addEventListener("click",()=>{
-
-        tr.remove();
-
-        calculateTotal();
-
-    });
+    addEvents(tr);
 
 });
 
 // =====================
-// Download PDF
+// PDF Download
 // =====================
 
 document.getElementById("downloadPdf")
-.addEventListener("click",downloadPDF);
-
-async function downloadPDF(){
+.addEventListener("click", async function () {
 
     const { jsPDF } = window.jspdf;
 
     const bill = document.getElementById("billArea");
 
-    const canvas = await html2canvas(bill,{
+    const canvas = await html2canvas(bill, {
 
-        scale:2,
-
-        useCORS:true,
-
-        backgroundColor:"#ffffff"
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff"
 
     });
 
@@ -140,11 +115,9 @@ async function downloadPDF(){
 
     const pdf = new jsPDF({
 
-        orientation:"portrait",
-
-        unit:"mm",
-
-        format:"letter"
+        orientation: "portrait",
+        unit: "mm",
+        format: "letter"
 
     });
 
@@ -152,77 +125,43 @@ async function downloadPDF(){
 
     const pageHeight = pdf.internal.pageSize.getHeight();
 
-    const imgWidth = pageWidth - 10;
+    const margin = 8;
+
+    const imgWidth = pageWidth - (margin * 2);
 
     const imgHeight = canvas.height * imgWidth / canvas.width;
 
-    let heightLeft = imgHeight;
+    // Fit to page
+    let finalHeight = imgHeight;
 
-    let position = 5;
+    if (finalHeight > (pageHeight - 15)) {
 
-    pdf.addImage(
-
-        imgData,
-
-        "PNG",
-
-        5,
-
-        position,
-
-        imgWidth,
-
-        imgHeight,
-
-        "",
-
-        "FAST"
-
-    );
-
-    heightLeft -= pageHeight;
-
-    while(heightLeft > 0){
-
-        position = heightLeft - imgHeight + 5;
-
-        pdf.addPage();
-
-        pdf.addImage(
-
-            imgData,
-
-            "PNG",
-
-            5,
-
-            position,
-
-            imgWidth,
-
-            imgHeight,
-
-            "",
-
-            "FAST"
-
-        );
-
-        heightLeft -= pageHeight;
+        finalHeight = pageHeight - 15;
 
     }
+
+    pdf.addImage(
+        imgData,
+        "PNG",
+        margin,
+        5,
+        imgWidth,
+        finalHeight,
+        "",
+        "FAST"
+    );
 
     let month = document.getElementById("month").value;
 
-    if(month==""){
+    if (month === "") {
 
-        month="Travel";
+        month = "Travel";
 
     }
 
-    pdf.save("Travel_Bill_Summary_"+month+".pdf");
+    pdf.save("Travel_Bill_Summary_" + month + ".pdf");
 
-}
+});
 
-// Initial calculation
+// Initial Calculation
 calculateTotal();
